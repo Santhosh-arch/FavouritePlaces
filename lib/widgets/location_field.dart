@@ -4,15 +4,23 @@ import "package:flutter/material.dart";
 import "package:location/location.dart";
 import "package:http/http.dart" as http;
 import "package:san_favourite_places/config/config.dart";
+import "package:san_favourite_places/models/place_location.dart";
 
 class LocationField extends StatefulWidget {
+  const LocationField({required this.onLocationAdd, super.key});
+
+  final void Function(PlaceLocation?) onLocationAdd;
   @override
   State<LocationField> createState() => _LocationFieldState();
 }
 
 class _LocationFieldState extends State<LocationField> {
-  Location? selectedLocation;
+  PlaceLocation? selectedLocation;
   bool isLocationLoading = false;
+
+  String get mapUrl {
+    return "https://maps.googleapis.com/maps/api/staticmap?center=${selectedLocation?.lattitude},${selectedLocation?.longitude}&zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:C%7C${selectedLocation?.lattitude},${selectedLocation?.longitude}&key=${Config.mapApiKey}";
+  }
 
   Future<void> getCurrentLocation() async {
     Location location = new Location();
@@ -36,18 +44,34 @@ class _LocationFieldState extends State<LocationField> {
         return;
       }
     }
+
     setState(() {
       isLocationLoading = true;
     });
 
-    _locationData = await location.getLocation();
-    final jsonRes = await http.get(Uri.parse(
-        "https://maps.googleapis.com/maps/api/geocode/json?latlng=${_locationData.latitude},${_locationData.longitude}&key=${Config.mapApiKey}"));
-    final res = jsonDecode(jsonRes.body);
-    final address = res["results"][0]["formatted_address"];
-    setState(() {
-      isLocationLoading = false;
-    });
+    try {
+      _locationData = await location.getLocation();
+      if (_locationData.latitude == null || _locationData.longitude == null) {
+        throw "Unable to get current location";
+      }
+
+      final jsonRes = await http.get(Uri.parse(
+          "https://maps.googleapis.com/maps/api/geocode/json?latlng=${_locationData.latitude},${_locationData.longitude}&key=${Config.mapApiKey}"));
+      final res = jsonDecode(jsonRes.body);
+      final address = res["results"][0]["formatted_address"];
+      selectedLocation =
+          PlaceLocation(lattitude: _locationData.latitude!, longitude: _locationData.longitude!, address: address);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Unable to get current location")));
+      }
+    } finally {
+      setState(() {
+        isLocationLoading = false;
+      });
+
+      widget.onLocationAdd(selectedLocation);
+    }
   }
 
   @override
@@ -57,7 +81,12 @@ class _LocationFieldState extends State<LocationField> {
       style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.onBackground),
     );
 
-    if (isLocationLoading) content = const CircularProgressIndicator();
+    if (isLocationLoading) {
+      content = const CircularProgressIndicator();
+    } else if (selectedLocation != null) {
+      content = Image.network(mapUrl);
+    }
+
     return Column(
       children: [
         Container(
