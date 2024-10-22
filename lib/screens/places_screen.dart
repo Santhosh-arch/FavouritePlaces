@@ -42,21 +42,27 @@ class PlacesScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final place = places[index];
                 return ListTile(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => PlaceDetailScreen(place: place),
-                          ));
-                    },
-                    leading: CircleAvatar(
-                      backgroundImage: FileImage(place.image),
-                    ),
-                    title: Text(place.title,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
-                            ?.copyWith(color: Theme.of(context).colorScheme.onSurface)));
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => PlaceDetailScreen(place: place),
+                        ));
+                  },
+                  leading: CircleAvatar(
+                    backgroundImage: FileImage(place.image),
+                  ),
+                  title: Text(place.title,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(color: Theme.of(context).colorScheme.onSurface)),
+                  subtitle: Text(place.location.address,
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall
+                          ?.copyWith(color: Theme.of(context).colorScheme.onSurface)),
+                );
               },
             );
           }
