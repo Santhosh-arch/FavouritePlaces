@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:san_favourite_places/config/config.dart';
+import 'package:san_favourite_places/screens/map_screen.dart';
 
 import '../models/place.dart';
 
@@ -31,32 +32,42 @@ class PlaceDetailScreen extends StatelessWidget {
               bottom: 0,
               left: 0,
               right: 0,
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 60,
-                    foregroundImage: NetworkImage(mapUrl),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.transparent,
-                          Colors.black54,
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+              child: InkWell(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MapScreen(
+                        isSelection: false,
+                        place: place.location,
                       ),
+                    )),
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 60,
+                      foregroundImage: NetworkImage(mapUrl),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
-                    child: Text(place.location.address,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            )),
-                  )
-                ],
+                    Container(
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.black26,
+                            Colors.black,
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                      child: Text(place.location.address,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              )),
+                    )
+                  ],
+                ),
               ))
         ],
       ),
