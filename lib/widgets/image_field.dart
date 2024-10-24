@@ -31,7 +31,10 @@ class _ImageFieldWidgetState extends State<ImageFieldWidget> {
   Widget build(BuildContext context) {
     Widget content = TextButton.icon(
       onPressed: takePic,
-      label: const Text("Select Image"),
+      label: Text(
+        "Select Image",
+        style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
+      ),
       icon: const Icon(Icons.camera),
     );
 

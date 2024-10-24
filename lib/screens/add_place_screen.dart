@@ -71,6 +71,7 @@ class AddPlaceScreen extends ConsumerWidget {
                   ImageFieldWidget(
                     onImageSelection: onImageSelection,
                   ),
+                  const SizedBox(height: 16),
                   LocationField(
                     onLocationAdd: onLocationAdd,
                   ),

@@ -9,7 +9,7 @@ class PlaceDetailScreen extends StatelessWidget {
 
   final Place place;
   String get mapUrl {
-    final lat = place.location.lattitude;
+    final lat = place.location.latitude;
     final long = place.location.longitude;
     return "https://maps.googleapis.com/maps/api/staticmap?center=${lat},${long}&zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:C%7C${lat},${long}&key=${Config.mapApiKey}";
   }
