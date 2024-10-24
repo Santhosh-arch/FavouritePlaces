@@ -29,7 +29,7 @@ class AddPlaceScreen extends ConsumerWidget {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
       if (selectedImage != null && selectedLocation != null) {
-        favProvider.addORemovePlace(Place(
+        favProvider.addPlace(Place(
           title: place!,
           image: selectedImage!,
           location: selectedLocation!,

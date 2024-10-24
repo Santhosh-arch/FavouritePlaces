@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:san_favourite_places/providers/fav_places_provider.dart';
 import 'package:san_favourite_places/screens/add_place_screen.dart';
-import 'package:san_favourite_places/screens/place_detail_screen.dart';
+import 'package:san_favourite_places/widgets/places_list.dart';
 
-class PlacesScreen extends StatelessWidget {
+class PlacesScreen extends ConsumerStatefulWidget {
   const PlacesScreen({super.key});
 
   @override
+  ConsumerState<PlacesScreen> createState() => _PlacesScreenState();
+}
+
+class _PlacesScreenState extends ConsumerState<PlacesScreen> {
+  late final Future<void> _placesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _placesFuture = ref.read(favPlacesProvider.notifier).loadPlaces();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final places = ref.watch(favPlacesProvider);
     return Scaffold(
       // backgroundColor: Theme.of(context).colorScheme.onSecondary,
       appBar: AppBar(
@@ -26,46 +39,13 @@ class PlacesScreen extends StatelessWidget {
               icon: const Icon(Icons.add)),
         ],
       ),
-      body: Consumer(
-        builder: (context, ref, child) {
-          final places = ref.watch(favPlacesProvider);
-          if (places.isEmpty) {
-            return Center(
-              child: Text(
-                "There are no places",
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.onSurface),
-              ),
-            );
-          } else {
-            return ListView.builder(
-              itemCount: places.length,
-              itemBuilder: (context, index) {
-                final place = places[index];
-                return ListTile(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PlaceDetailScreen(place: place),
-                        ));
-                  },
-                  leading: CircleAvatar(
-                    backgroundImage: FileImage(place.image),
-                  ),
-                  title: Text(place.title,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(color: Theme.of(context).colorScheme.onSurface)),
-                  subtitle: Text(place.location.address,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: Theme.of(context).colorScheme.onSurface)),
-                );
-              },
-            );
+      body: FutureBuilder(
+        future: _placesFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
           }
+          return PlacesList(places: places);
         },
       ),
     );
