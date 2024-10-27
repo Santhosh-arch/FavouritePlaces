@@ -133,6 +133,7 @@ class _LocationFieldState extends State<LocationField> {
           child: content,
         ),
         Row(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextButton.icon(
               onPressed: getCurrentLocation,

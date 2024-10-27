@@ -24,7 +24,7 @@ class AddPlaceScreen extends ConsumerWidget {
     selectedLocation = location;
   }
 
-  void addPlace(WidgetRef ref) {
+  void addPlace(WidgetRef ref, BuildContext context) {
     final favProvider = ref.read(favPlacesProvider.notifier);
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
@@ -35,6 +35,7 @@ class AddPlaceScreen extends ConsumerWidget {
           location: selectedLocation!,
         ));
       }
+      Navigator.pop(context);
     }
   }
 
@@ -78,8 +79,7 @@ class AddPlaceScreen extends ConsumerWidget {
                   const SizedBox(height: 16),
                   ElevatedButton.icon(
                     onPressed: () {
-                      addPlace(ref);
-                      Navigator.pop(context);
+                      addPlace(ref, context);
                     },
                     label: const Text("Add Place"),
                     icon: const Icon(Icons.add),
