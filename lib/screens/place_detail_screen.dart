@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:san_favourite_places/config/config.dart';
+import 'package:san_favourite_places/providers/fav_places_provider.dart';
 import 'package:san_favourite_places/screens/map_screen.dart';
+import 'package:san_favourite_places/widgets/alert_dialog.dart';
 
 import '../models/place.dart';
 
-class PlaceDetailScreen extends StatelessWidget {
+class PlaceDetailScreen extends ConsumerWidget {
   const PlaceDetailScreen({required this.place, super.key});
 
   final Place place;
@@ -14,11 +17,26 @@ class PlaceDetailScreen extends StatelessWidget {
     return "https://maps.googleapis.com/maps/api/staticmap?center=${lat},${long}&zoom=13&size=600x300&maptype=roadmap&markers=color:red%7Clabel:C%7C${lat},${long}&key=${Config.mapApiKey}";
   }
 
+  Future<void> deletePlace(BuildContext context, WidgetRef ref) async {
+    final shouldDelete = await confirmPlaceDeletion(context, place.title, place.location.address);
+    if (shouldDelete == true) {
+      await ref.read(favPlacesProvider.notifier).removePlace(place.id);
+      if (context.mounted) Navigator.of(context).pop();
+    }
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text(place.title),
+        actions: [
+          IconButton(
+              onPressed: () {
+                deletePlace(context, ref);
+              },
+              icon: const Icon(Icons.delete))
+        ],
       ),
       body: Stack(
         children: [

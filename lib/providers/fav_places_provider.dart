@@ -18,6 +18,7 @@ Future<Database> _getDb() async {
     },
     version: 1,
   );
+
   return db;
 }
 
@@ -65,6 +66,32 @@ class FavNotifier extends Notifier<List<Place>> {
     });
     state = [...state, place];
     return true;
+  }
+
+  Future<void> removePlace(String placeId) async {
+    final db = await _getDb();
+    await db.delete("fav_places", where: "id = ?", whereArgs: [placeId]);
+    state = state.where((element) => element.id != placeId).toList();
+  }
+
+  Future<void> updatePlace(Place place) async {
+    final db = await _getDb();
+    await db.update(
+        "fav_places",
+        {
+          'title': place.title,
+          'image': place.image.path,
+          'lat': place.location.latitude,
+          'lng': place.location.longitude,
+          'address': place.location.address,
+        },
+        where: "id = ?",
+        whereArgs: [place.id]);
+
+    state = [
+      for (var item in state)
+        if (item.id == place.id) place else item
+    ];
   }
 }
 
