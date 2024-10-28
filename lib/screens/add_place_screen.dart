@@ -7,6 +7,7 @@ import 'package:san_favourite_places/models/place_location.dart';
 import 'package:san_favourite_places/providers/fav_places_provider.dart';
 import 'package:san_favourite_places/widgets/image_form_field.dart';
 import 'package:san_favourite_places/widgets/location_field.dart';
+import 'package:san_favourite_places/widgets/location_form_field.dart';
 
 import '../widgets/image_field.dart';
 
@@ -82,8 +83,12 @@ class AddPlaceScreen extends ConsumerWidget {
                   //   onImageSelection: onImageSelection,
                   // ),
                   const SizedBox(height: 16),
-                  LocationField(
-                    onLocationAdd: onLocationAdd,
+                  LocationFormField(
+                    validator: (location) {
+                      if (location == null) return "Please select Location";
+                      return null;
+                    },
+                    onSaved: onLocationAdd,
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton.icon(

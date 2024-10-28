@@ -9,9 +9,11 @@ import "package:san_favourite_places/models/place_location.dart";
 import "package:san_favourite_places/screens/map_screen.dart";
 
 class LocationField extends StatefulWidget {
-  const LocationField({required this.onLocationAdd, super.key});
+  const LocationField({required this.onLocationAdd, this.hasError = false, this.errorMsg, super.key});
 
   final void Function(PlaceLocation?) onLocationAdd;
+  final bool hasError;
+  final String? errorMsg;
   @override
   State<LocationField> createState() => _LocationFieldState();
 }
@@ -107,9 +109,12 @@ class _LocationFieldState extends State<LocationField> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     Widget content = Text(
       "No location is picked",
-      style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Theme.of(context).colorScheme.primary),
+      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+            color: widget.hasError ? theme.colorScheme.error : theme.colorScheme.primary,
+          ),
     );
 
     if (isLocationLoading) {
@@ -124,14 +129,30 @@ class _LocationFieldState extends State<LocationField> {
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
           height: 250,
           width: double.infinity,
           alignment: Alignment.center,
-          decoration: BoxDecoration(border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.1))),
+          decoration: BoxDecoration(
+              border: Border.all(
+            color: widget.hasError
+                ? Theme.of(context).colorScheme.error
+                : Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          )),
           child: content,
         ),
+        if (widget.hasError && widget.errorMsg != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              widget.errorMsg!,
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+            ),
+          ),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

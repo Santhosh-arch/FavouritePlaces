@@ -77,11 +77,11 @@ class _ImageFieldWidgetState extends State<ImageFieldWidget> {
           )),
           child: content,
         ),
-        if (widget.hasError)
+        if (widget.hasError && widget.errorMsg != null)
           Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Text(
-              "Please select an image",
+              widget.errorMsg!,
               style: Theme.of(context).textTheme.bodySmall!.copyWith(
                     color: Theme.of(context).colorScheme.error,
                   ),
