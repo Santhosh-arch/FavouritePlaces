@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:san_favourite_places/models/place.dart';
 import 'package:san_favourite_places/models/place_location.dart';
 import 'package:san_favourite_places/providers/fav_places_provider.dart';
+import 'package:san_favourite_places/widgets/image_form_field.dart';
 import 'package:san_favourite_places/widgets/location_field.dart';
 
 import '../widgets/image_field.dart';
@@ -16,7 +17,7 @@ class AddPlaceScreen extends ConsumerWidget {
   File? selectedImage;
   PlaceLocation? selectedLocation;
 
-  void onImageSelection(File file) {
+  void onImageSelection(File? file) {
     selectedImage = file;
   }
 
@@ -69,9 +70,17 @@ class AddPlaceScreen extends ConsumerWidget {
                     },
                   ),
                   const SizedBox(height: 16),
-                  ImageFieldWidget(
-                    onImageSelection: onImageSelection,
+                  ImageFormField(
+                    validator: (imgFile) {
+                      if (imgFile == null) return "Please select an Image";
+
+                      return null;
+                    },
+                    onSaved: onImageSelection,
                   ),
+                  // ImageFieldWidget(
+                  //   onImageSelection: onImageSelection,
+                  // ),
                   const SizedBox(height: 16),
                   LocationField(
                     onLocationAdd: onLocationAdd,
