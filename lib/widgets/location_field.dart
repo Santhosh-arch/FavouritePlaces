@@ -9,9 +9,16 @@ import "package:san_favourite_places/models/place_location.dart";
 import "package:san_favourite_places/screens/map_screen.dart";
 
 class LocationField extends StatefulWidget {
-  const LocationField({required this.onLocationAdd, this.hasError = false, this.errorMsg, super.key});
+  const LocationField({
+    required this.onLocationAdd,
+    this.hasError = false,
+    this.errorMsg,
+    this.initialvalue,
+    super.key,
+  });
 
   final void Function(PlaceLocation?) onLocationAdd;
+  final PlaceLocation? initialvalue;
   final bool hasError;
   final String? errorMsg;
   @override
@@ -105,6 +112,12 @@ class _LocationFieldState extends State<LocationField> {
     });
 
     widget.onLocationAdd(selectedLocation);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    selectedLocation = widget.initialvalue;
   }
 
   @override

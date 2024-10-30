@@ -6,14 +6,12 @@ import 'package:san_favourite_places/models/place.dart';
 import 'package:san_favourite_places/models/place_location.dart';
 import 'package:san_favourite_places/providers/fav_places_provider.dart';
 import 'package:san_favourite_places/widgets/image_form_field.dart';
-import 'package:san_favourite_places/widgets/location_field.dart';
 import 'package:san_favourite_places/widgets/location_form_field.dart';
 
-import '../widgets/image_field.dart';
-
 class AddPlaceScreen extends ConsumerWidget {
-  AddPlaceScreen({super.key});
+  AddPlaceScreen({super.key, this.placeToUpdate});
   final formKey = GlobalKey<FormState>();
+  final Place? placeToUpdate;
   String? place = "";
   File? selectedImage;
   PlaceLocation? selectedLocation;
@@ -30,8 +28,18 @@ class AddPlaceScreen extends ConsumerWidget {
     final favProvider = ref.read(favPlacesProvider.notifier);
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
-      if (selectedImage != null && selectedLocation != null) {
+
+      if (selectedLocation == null && selectedImage == null) return;
+
+      if (placeToUpdate == null) {
         favProvider.addPlace(Place(
+          title: place!,
+          image: selectedImage!,
+          location: selectedLocation!,
+        ));
+      } else {
+        favProvider.updatePlace(Place(
+          id: placeToUpdate!.id,
           title: place!,
           image: selectedImage!,
           location: selectedLocation!,
@@ -55,6 +63,7 @@ class AddPlaceScreen extends ConsumerWidget {
               child: Column(
                 children: [
                   TextFormField(
+                    initialValue: placeToUpdate?.title,
                     decoration: const InputDecoration(
                       label: Text("Name"),
                     ),
@@ -72,6 +81,7 @@ class AddPlaceScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
                   ImageFormField(
+                    initialValue: placeToUpdate?.image,
                     validator: (imgFile) {
                       if (imgFile == null) return "Please select an Image";
 
@@ -84,6 +94,7 @@ class AddPlaceScreen extends ConsumerWidget {
                   // ),
                   const SizedBox(height: 16),
                   LocationFormField(
+                    initialValue: placeToUpdate?.location,
                     validator: (location) {
                       if (location == null) return "Please select Location";
                       return null;
@@ -95,7 +106,7 @@ class AddPlaceScreen extends ConsumerWidget {
                     onPressed: () {
                       addPlace(ref, context);
                     },
-                    label: const Text("Add Place"),
+                    label: placeToUpdate == null ? const Text("Add Place") : const Text("Update Place"),
                     icon: const Icon(Icons.add),
                   )
                 ],

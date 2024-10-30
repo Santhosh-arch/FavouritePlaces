@@ -4,8 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageFieldWidget extends StatefulWidget {
-  const ImageFieldWidget({super.key, required this.onImageSelection, this.hasError = false, this.errorMsg});
+  const ImageFieldWidget({
+    super.key,
+    required this.onImageSelection,
+    this.hasError = false,
+    this.errorMsg,
+    this.initialValue,
+  });
   final void Function(File file) onImageSelection;
+  final File? initialValue;
   final bool hasError;
   final String? errorMsg;
   @override
@@ -35,6 +42,12 @@ class _ImageFieldWidgetState extends State<ImageFieldWidget> {
     });
 
     widget.onImageSelection(selectedFile!);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    selectedFile = widget.initialValue;
   }
 
   @override

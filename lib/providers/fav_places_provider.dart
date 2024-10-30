@@ -69,12 +69,33 @@ class FavNotifier extends Notifier<List<Place>> {
   }
 
   Future<void> removePlace(String placeId) async {
+    try {
+      final placeToDelete = state.firstWhere(
+        (element) => element.id == placeId,
+      );
+      await placeToDelete.image.delete();
+    } catch (e) {
+      print("Unable to delete image associated with place");
+    }
+
     final db = await _getDb();
     await db.delete("fav_places", where: "id = ?", whereArgs: [placeId]);
     state = state.where((element) => element.id != placeId).toList();
   }
 
   Future<void> updatePlace(Place place) async {
+    try {
+      final placeToUpdate = state.firstWhere(
+        (element) => element.id == place.id,
+      );
+
+      if (placeToUpdate.image.path != place.image.path) {
+        await placeToUpdate.image.delete();
+      }
+    } catch (e) {
+      print("Unable to delete image associated with place");
+    }
+
     final db = await _getDb();
     await db.update(
         "fav_places",
