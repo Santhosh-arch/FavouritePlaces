@@ -30,7 +30,7 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
-/lib/config/config.dart
+
 
 # Symbolication related
 app.*.symbols
@@ -43,5 +43,3 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-
-android/app/src/main/AndroidManifest.xml

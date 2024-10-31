@@ -53,7 +53,7 @@ class AddPlaceScreen extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add New Place"),
+        title: placeToUpdate != null ? const Text("Update Place") : const Text("Add New Place"),
       ),
       body: SingleChildScrollView(
         child: Form(
