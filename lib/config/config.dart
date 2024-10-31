@@ -1,3 +1,3 @@
 class Config {
-  static const String mapApiKey = "AIzaSyAUqnzDYFgstZWIEOOmZiIAE8UvYWKrpBg";
+  static const String mapApiKey = "YOUR KEY HERE";
 }
