@@ -9,15 +9,18 @@ A flutter app to save your favourite places.
 * Your data is persisted across app restarts with the help of sqflite
 
 # Screenshots
-![](/screenshots/1.jpg)
-![](/screenshots/2.jpg)
-![](/screenshots/3.jpg)
-![](/screenshots/4.jpg)
-![](/screenshots/5.jpg)
-![](/screenshots/6.jpg)
-![](/screenshots/7.jpg)
+<img src="/screenshots/1.jpg" width="250"/> <img src="/screenshots/2.jpg" width="250"/>
+<img src="/screenshots/3.jpg" width="250"/>
+<img src="/screenshots/4.jpg" width="250"/>
+<img src="/screenshots/5.jpg" width="250"/>
+<img src="/screenshots/6.jpg" width="250"/>
+<img src="/screenshots/7.jpg" width="250"/>
+
 # Video
-![](/screenshots/8.jpg)
+
+https://github.com/user-attachments/assets/e84f14d2-7b95-4808-8f3e-2ce8c0e0a7a1
+
+
 
 # Packages Used
 * image_picker for picking image from Gallery or Camera
